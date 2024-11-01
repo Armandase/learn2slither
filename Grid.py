@@ -81,7 +81,6 @@ class Grid():
         elif checked_pos == GREEN_APPLE:
             # score ++
             self.board[tuple(self.generate_empty_pos())] = GREEN_APPLE
-            pass
         elif checked_pos == RED_APPLE:
             self.remove_tip_tail()
             self.remove_tip_tail()
@@ -89,12 +88,16 @@ class Grid():
 
         self.snake.append(self.head_pos)
         self.current_dir = next_dir
+        if len(self.snake) <= 0:
+            self.reset_grid()
+            return
 
     def check_move(self, new_pos):
-        if new_pos[0] < 0 or new_pos[0] >= self.grid_size \
-                or new_pos[1] < 0 or new_pos[1] >= self.grid_size:
+        # if new_pos[0] < 0 or new_pos[0] >= self.grid_size \
+                # or new_pos[1] < 0 or new_pos[1] >= self.grid_size:
+            # return -1
+        if not (0 <= new_pos).all() or not (new_pos < self.grid_size).all():
             return -1
-        # if not (0 <= new_pos).all() or not (new_pos < self.grid_size).all():
 
         if self.board[tuple(new_pos)] == TAIL:
             return -1
