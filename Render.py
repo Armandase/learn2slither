@@ -1,15 +1,20 @@
 import pygame
-from constants import WINDOW_SIZE, DEFAULT_SIZE, TITLE, TAIL, HEAD, GREEN_APPLE, RED_APPLE
-from constants import COLORS_RED_APPLE, COLORS_GREEN_APPLE, COLORS_SNAKE, COLORS_EMPTY, COLORS_LINES
+from constants import W_WIDTH, W_HEIGHT, DEFAULT_SIZE, TITLE, \
+    TAIL, HEAD, GREEN_APPLE, RED_APPLE, \
+    COLORS_RED_APPLE, COLORS_GREEN_APPLE, COLORS_SNAKE, \
+    COLORS_EMPTY, COLORS_LINES
 
 
 class Render():
-    def __init__(self, window_size=WINDOW_SIZE, grid_size=DEFAULT_SIZE):
+    def __init__(self,
+                 w_width=W_WIDTH, w_height=W_HEIGHT,
+                 grid_size=DEFAULT_SIZE):
         pygame.init()
-        self.screen = pygame.display.set_mode((window_size, window_size))
+        self.screen = pygame.display.set_mode((w_width, w_height))
         pygame.display.set_caption(TITLE)
-        self.window_size = window_size
-        self.ratio = window_size / grid_size
+        self.window_width = w_width
+        self.window_height = w_height
+        self.ratio = w_height / grid_size
 
     def __del__(self):
         pygame.quit()
@@ -22,9 +27,6 @@ class Render():
 
     def display_background(self):
         self.screen.fill("black")
-
-    def get_window_size(self):
-        return (self.window_size)
 
     def draw_grid(self, grid):
         rows, cols = grid.shape
@@ -47,3 +49,9 @@ class Render():
 
                 pygame.draw.rect(self.screen, color, rect)
                 pygame.draw.rect(self.screen, COLORS_LINES, rect, 1)
+
+    def display_score(self, score):
+        font = pygame.font.Font(None, 36)
+
+        score_text = font.render(f'Score: {score}', True, COLORS_LINES)
+        self.screen.blit(score_text, (10, 10))

@@ -1,14 +1,12 @@
 import pygame
 
-from constants import FPS
 from utils import handle_keys
+from constants import GAME_SPEED
 
 
 def main_loop(render, grid):
     clock = pygame.time.Clock()
     running = True
-    dt = 0
-    # head_pos = pygame.Vector2(tuple(grid.get_head_pos()))
 
     while running:
 
@@ -16,7 +14,10 @@ def main_loop(render, grid):
             if event.type == pygame.QUIT:
                 running = False
 
+        score = grid.get_snake_len()
+
         render.draw_grid(grid.board)
+        render.display_score(score)
 
         keys = pygame.key.get_pressed()
         if handle_keys(keys, grid) is False:
@@ -24,6 +25,4 @@ def main_loop(render, grid):
 
         pygame.display.flip()
 
-        # clock.tick(10 + score // 5) 
-        clock.tick(7) 
-
+        clock.tick(GAME_SPEED + score // 3)
