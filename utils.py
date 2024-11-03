@@ -23,13 +23,13 @@ def handle_keys(keys, grid):
     current_dir = grid.get_current_dir()
     next_dir = grid.get_current_dir()
 
-    if keys[pygame.K_z] and current_dir != DOWN:
+    if (keys[pygame.K_z] or keys[pygame.K_UP]) and current_dir != DOWN:
         next_dir = UP
-    elif keys[pygame.K_s] and current_dir != UP:
+    elif (keys[pygame.K_s] or keys[pygame.K_DOWN]) and current_dir != UP:
         next_dir = DOWN
-    elif keys[pygame.K_q] and current_dir != RIGHT:
+    elif (keys[pygame.K_q] or keys[pygame.K_LEFT]) and current_dir != RIGHT:
         next_dir = LEFT
-    elif keys[pygame.K_d] and current_dir != LEFT:
+    elif (keys[pygame.K_d] or keys[pygame.K_RIGHT]) and current_dir != LEFT:
         next_dir = RIGHT
     elif keys[pygame.K_ESCAPE]:
         return False

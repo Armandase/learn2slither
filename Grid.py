@@ -14,36 +14,49 @@ class Grid():
         self.board = np.zeros((size, size))
 
         self.snake = deque()
-        self.init_snake()
+        self.init_board()
 
-        self.board[tuple(self.generate_empty_pos())] = GREEN_APPLE
-        self.board[tuple(self.generate_empty_pos())] = GREEN_APPLE
-        self.board[tuple(self.generate_empty_pos())] = RED_APPLE
-
-    def init_snake(self):
+    def init_board(self):
         self.head_pos = np.random.randint(self.grid_size, size=2)
         self.board[tuple(self.head_pos)] = HEAD
         body = self.generate_around(self.head_pos)
+        if body is None:
+            self.reset_grid()
+            return
         self.board[tuple(body)] = TAIL
         tail = self.generate_around(body)
+        if tail is None:
+            self.reset_grid()
+            return
         self.board[tuple(tail)] = TAIL
         self.snake.append(tail)
         self.snake.append(body)
         self.snake.append(self.head_pos)
 
+        self.board[tuple(self.generate_empty_pos())] = GREEN_APPLE
+        self.board[tuple(self.generate_empty_pos())] = GREEN_APPLE
+        self.board[tuple(self.generate_empty_pos())] = RED_APPLE
+
     def generate_around(self, in_pos):
-        def get_direction(value, limit):
-            if value <= 0:
-                return 1
-            elif value >= limit - 1:
-                return -1
-            else:
-                return random.choice([-1, 1])
         pos = in_pos.copy()
-        if random.choice([0, 1]) == 0:
-            pos[0] += get_direction(pos[0], self.grid_size)
+        available_pos = []
+        directions = [
+            (1, 0),
+            (-1, 0),
+            (0, 1),
+            (0, -1)
+        ]
+
+        for dx, dy in directions:
+            new_x, new_y = pos[0] + dx, pos[1] + dy
+            if 0 <= new_x < 10 and 0 <= new_y < 10 and self.board[(new_x, new_y)] == EMPTY:
+                available_pos.append([new_x, new_y])
+
+        if available_pos:
+            pos = available_pos[np.random.choice(len(available_pos))]
         else:
-            pos[1] += get_direction(pos[1], self.grid_size)
+            return None
+
         return pos
 
     def generate_empty_pos(self):
@@ -61,6 +74,12 @@ class Grid():
 
     def get_current_dir(self):
         return (self.current_dir)
+
+    def get_board(self):
+        return (self.board)
+
+    def get_head_pos(self):
+        return (self.head_pos)
 
     def update_board(self, next_dir):
         new_pos = dir_to_point(next_dir)
@@ -108,11 +127,8 @@ class Grid():
         self.board = np.zeros((self.grid_size, self.grid_size))
 
         self.snake = deque()
-        self.init_snake()
+        self.init_board()
 
-        self.board[tuple(self.generate_empty_pos())] = GREEN_APPLE
-        self.board[tuple(self.generate_empty_pos())] = GREEN_APPLE
-        self.board[tuple(self.generate_empty_pos())] = RED_APPLE
         self.current_dir = None
 
     def remove_tip_tail(self):

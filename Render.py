@@ -2,7 +2,7 @@ import pygame
 from constants import W_WIDTH, W_HEIGHT, DEFAULT_SIZE, TITLE, \
     TAIL, HEAD, GREEN_APPLE, RED_APPLE, \
     COLORS_RED_APPLE, COLORS_GREEN_APPLE, COLORS_SNAKE, \
-    COLORS_EMPTY, COLORS_LINES
+    COLORS_EMPTY, COLORS_LINES, COLORS_TOOLBAR, COLORS_SNAKE_HEAD
 
 
 class Render():
@@ -15,6 +15,8 @@ class Render():
         self.window_width = w_width
         self.window_height = w_height
         self.ratio = w_height / grid_size
+        
+        self.toolbar_width = self.window_width - self.window_height
 
     def __del__(self):
         pygame.quit()
@@ -33,7 +35,9 @@ class Render():
 
         for row in range(rows):
             for col in range(cols):
-                if grid[row, col] == HEAD or grid[row, col] == TAIL:
+                if grid[row, col] == HEAD:
+                    color = COLORS_SNAKE_HEAD
+                elif grid[row, col] == TAIL:
                     color = COLORS_SNAKE
                 elif grid[row, col] == RED_APPLE:
                     color = COLORS_RED_APPLE
@@ -50,8 +54,18 @@ class Render():
                 pygame.draw.rect(self.screen, color, rect)
                 pygame.draw.rect(self.screen, COLORS_LINES, rect, 1)
 
-    def display_score(self, score):
-        font = pygame.font.Font(None, 36)
+    def display_toolbar(self, score):
+        rect = pygame.Rect(
+                    self.window_height, 0,
+                    self.toolbar_width, self.window_height
+                )
+        pygame.draw.rect(self.screen, COLORS_TOOLBAR, rect)
+        self.display_score(score)
 
-        score_text = font.render(f'Score: {score}', True, COLORS_LINES)
-        self.screen.blit(score_text, (10, 10))
+    def display_score(self, score):
+        score_str = f'Score: {score}'
+
+        font = pygame.font.Font(None, self.toolbar_width // len(score_str))
+        score_text = font.render(score_str, True, COLORS_LINES, COLORS_EMPTY)
+
+        self.screen.blit(score_text, (self.window_height + 10, 10))
