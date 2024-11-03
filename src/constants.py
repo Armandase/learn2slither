@@ -6,6 +6,7 @@ TITLE = "learn2slither"
 
 GAME_SPEED = 7
 EPOCHS = 1000
+IMAGE_PATH = 'assets/geometry_dark/'
 
 EMPTY = 0
 TAIL = 1

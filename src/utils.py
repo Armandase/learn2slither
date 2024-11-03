@@ -1,6 +1,6 @@
 import pygame
 import numpy as np
-from constants import UP, DOWN, LEFT, RIGHT
+from src.constants import UP, DOWN, LEFT, RIGHT
 
 
 def dir_to_point(dir):

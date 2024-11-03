@@ -1,5 +1,5 @@
 import numpy as np
-from constants import CHAR_MAP
+from src.constants import CHAR_MAP
 
 def snake_vision(grid):
     board = grid.get_board()

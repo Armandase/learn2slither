@@ -1,9 +1,9 @@
 import numpy as np
 import random
 from collections import deque
-from constants import DEFAULT_SIZE, HEAD, TAIL, GREEN_APPLE, RED_APPLE, EMPTY
+from src.constants import DEFAULT_SIZE, HEAD, TAIL, GREEN_APPLE, RED_APPLE, EMPTY
 # from constants import UP, DOWN, LEFT, RIGHT
-from utils import dir_to_point
+from src.utils import dir_to_point
 
 
 class Grid():

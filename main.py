@@ -1,9 +1,9 @@
 import argparse
 
-from Render import Render
-from Grid import Grid
-from game import main_loop
-from constants import DEFAULT_SIZE, W_HEIGHT, W_WIDTH, EPOCHS
+from src.Render import Render
+from src.Grid import Grid
+from src.game import main_loop
+from src.constants import DEFAULT_SIZE, W_HEIGHT, W_WIDTH, EPOCHS
 
 
 def main(size=DEFAULT_SIZE, window_width=W_HEIGHT, window_height=W_WIDTH, epochs=EPOCHS):
