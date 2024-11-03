@@ -1,8 +1,6 @@
 import numpy as np
-import random
 from collections import deque
-from src.constants import DEFAULT_SIZE, HEAD, TAIL, GREEN_APPLE, RED_APPLE, EMPTY
-# from constants import UP, DOWN, LEFT, RIGHT
+from src.constants import DEFAULT_SIZE, HEAD, TAIL, GREEN_APPLE, RED_APPLE, EMPTY, DEAD
 from src.utils import dir_to_point
 
 
@@ -86,42 +84,40 @@ class Grid():
         self.head_pos = self.snake[-1] + new_pos
 
         checked_pos = self.check_move(self.head_pos)
-        if checked_pos == -1:
-            self.reset_grid()
-            return
+        if checked_pos == DEAD:
+            return DEAD
 
         if next_dir is None:
-            return
+            return EMPTY
 
         self.board[tuple(self.head_pos)] = HEAD
         self.board[tuple(self.snake[-1])] = TAIL
         if checked_pos == EMPTY:
             self.remove_tip_tail()
         elif checked_pos == GREEN_APPLE:
-            # score ++
             self.board[tuple(self.generate_empty_pos())] = GREEN_APPLE
         elif checked_pos == RED_APPLE:
             if len(self.snake) <= 1:
-                self.reset_grid()
-                return
+                return DEAD
             self.remove_tip_tail()
             self.remove_tip_tail()
             self.board[tuple(self.generate_empty_pos())] = RED_APPLE
 
         self.snake.append(self.head_pos)
         self.current_dir = next_dir
+        return checked_pos
 
     def check_move(self, new_pos):
-        if not (0 <= new_pos).all() or not (new_pos < self.grid_size).all():
-            return -1
-
-        if self.board[tuple(new_pos)] == TAIL:
-            return -1
-        elif self.board[tuple(new_pos)] == GREEN_APPLE:
-            return GREEN_APPLE
-        elif self.board[tuple(new_pos)] == RED_APPLE:
-            return RED_APPLE
-        return EMPTY
+        # Check if the new position is out of bounds
+        if not (0 <= new_pos).all() or not (new_pos < self.grid_size).all() \
+            or self.board[tuple(new_pos)] == TAIL:
+            return DEAD
+        return self.board[tuple(new_pos)]
+        # elif self.board[tuple(new_pos)] == GREEN_APPLE:
+        #     return GREEN_APPLE
+        # elif self.board[tuple(new_pos)] == RED_APPLE:
+        #     return RED_APPLE
+        # return EMPTY
 
     def reset_grid(self):
         self.board = np.zeros((self.grid_size, self.grid_size))
@@ -137,3 +133,6 @@ class Grid():
 
     def get_snake_len(self):
         return (len(self.snake))
+
+    def get_snake(self):
+        return (self.snake)

@@ -1,28 +1,32 @@
 import numpy as np
-from src.constants import CHAR_MAP
+from src.constants import LEFT, RIGHT, UP, DOWN, REWARD_MAP, DEAD, EMPTY
 
-def snake_vision(grid):
+
+def game_state(grid):
     board = grid.get_board()
     x, y = grid.get_head_pos()
+    if x >= grid.get_grid_size() or x < 0 or y >= grid.get_grid_size() or y < 0:
+        test = np.zeros((grid.get_grid_size() * 2))
+        print("Test:", test.shape)
+        return np.zeros((grid.get_grid_size() * 2))
+    caca = np.concatenate((board[x, :], board[:, y]))
+    print("Caca: ", caca.shape)
     return np.concatenate((board[x, :], board[:, y]))
 
-def convert_vec_to_str(vec):
-    str_list = ['W']
-    str_list.extend(CHAR_MAP[val] for val in vec)
-    str_list.append('W')
-    return ''.join(str_list)
+
+def get_reward(new_case):
+    return REWARD_MAP[new_case]
 
 
-def print_snake_vision(vision, grid):
-    grid_size = grid.get_grid_size()
-    x, y = grid.get_head_pos()
+def step(action, grid):
+    new_case = EMPTY
+    if action == 0:
+        new_case = grid.update_board(LEFT)
+    elif action == 1:
+        new_case = grid.update_board(RIGHT)
+    elif action == 2:
+        new_case = grid.update_board(UP)
+    elif action == 3:
+        new_case = grid.update_board(DOWN)
 
-    str_grid = np.full((grid_size + 2, grid_size + 2), ' ', dtype=list)
-
-    row_str = convert_vec_to_str(vision[:grid_size])
-    col_str = convert_vec_to_str(vision[grid_size:])
-
-    str_grid[x, :] = list(row_str)
-    str_grid[:, y] = list(col_str)
-
-    print("\n".join("".join(row) for row in str_grid))
+    return get_reward(new_case), (True if new_case == DEAD else False)

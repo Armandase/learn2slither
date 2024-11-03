@@ -2,13 +2,12 @@ import pygame
 
 from src.utils import handle_keys
 from src.constants import GAME_SPEED
-from src.SnakeAgent import SnakeAgent
+from src.Interpreter import snake_vision, print_snake_vision
 
 
-def main_loop(render, grid, epochs):
+def main_loop(render, grid):
     clock = pygame.time.Clock()
     running = True
-    agent = SnakeAgent()
 
     while running:
 
@@ -20,8 +19,10 @@ def main_loop(render, grid, epochs):
 
         render.draw_grid(grid.board)
         render.display_toolbar(score, grid.get_grid_size())
-        agent.train(epochs, grid)
 
+        state = snake_vision(grid)
+        print_snake_vision(state, grid)
+        
         keys = pygame.key.get_pressed()
         if handle_keys(keys, grid) is False:
             running = False

@@ -4,6 +4,7 @@ from src.Render import Render
 from src.Grid import Grid
 from src.game import main_loop
 from src.constants import DEFAULT_SIZE, W_HEIGHT, W_WIDTH, EPOCHS
+from src.SnakeAgent import SnakeAgent
 
 
 def main(size=DEFAULT_SIZE, window_width=W_HEIGHT, window_height=W_WIDTH, epochs=EPOCHS):
@@ -14,7 +15,11 @@ def main(size=DEFAULT_SIZE, window_width=W_HEIGHT, window_height=W_WIDTH, epochs
     grid = Grid(size)
     render = Render(window_width, window_height, size)
 
-    main_loop(render, grid)
+    # main_loop(render, grid, epochs)
+    agent = SnakeAgent()
+    agent.train(epochs, grid)
+    # agent.train(grid, render, epochs)
+    # main_loop(render, grid)
 
 
 if __name__ == '__main__':
