@@ -5,12 +5,9 @@ from src.constants import LEFT, RIGHT, UP, DOWN, REWARD_MAP, DEAD, EMPTY
 def game_state(grid):
     board = grid.get_board()
     x, y = grid.get_head_pos()
+    # FIX ce probleme
     if x >= grid.get_grid_size() or x < 0 or y >= grid.get_grid_size() or y < 0:
-        test = np.zeros((grid.get_grid_size() * 2))
-        print("Test:", test.shape)
         return np.zeros((grid.get_grid_size() * 2))
-    caca = np.concatenate((board[x, :], board[:, y]))
-    print("Caca: ", caca.shape)
     return np.concatenate((board[x, :], board[:, y]))
 
 

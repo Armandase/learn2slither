@@ -9,7 +9,7 @@ class SnakeAgent():
         self.eps_discount = 0.9992
         self.min_eps = 0.001
         # self.q_table = np.zeros((11, 11, 4))
-        self.q_table = np.zeros((grid_size * 2, 4))
+        self.q_table = np.zeros((grid_size * 2 + 2, 4))
         self.prev_state = None
         self.prev_action = None
         self.score = 0
