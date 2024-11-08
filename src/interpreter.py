@@ -1,14 +1,17 @@
 import numpy as np
-from src.constants import LEFT, RIGHT, UP, DOWN, REWARD_MAP, DEAD, EMPTY
+from src.constants import LEFT, RIGHT, UP, DOWN, REWARD_MAP, DEAD, EMPTY, WALL
 
 
 def game_state(grid):
     board = grid.get_board()
     x, y = grid.get_head_pos()
-    # FIX ce probleme
-    if x >= grid.get_grid_size() or x < 0 or y >= grid.get_grid_size() or y < 0:
-        return np.zeros((grid.get_grid_size() * 2))
-    return np.concatenate((board[x, :], board[:, y]))
+
+    every_direction = np.empty((4, grid.get_grid_size()))
+    every_direction[0] = np.concatenate((board[x, :y], [WALL] * (grid.get_grid_size() - y)))
+    every_direction[1] = np.concatenate((board[x, y:], [WALL] * (y)))
+    every_direction[2] = np.concatenate((board[:x, y], [WALL] * (grid.get_grid_size() - x)))
+    every_direction[3] = np.concatenate((board[x:, y], [WALL] * (x)))
+    return every_direction
 
 
 def get_reward(new_case):

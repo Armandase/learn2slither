@@ -3,8 +3,8 @@ W_WIDTH = 1080
 DEFAULT_SIZE = 10
 TITLE = "learn2slither"
 
-GAME_SPEED = 7
-EPOCHS = 1000
+GAME_SPEED = 100
+EPOCHS = 10000
 IMAGE_PATH = 'assets/geometry_dark/'
 
 DEAD = -1
@@ -13,6 +13,7 @@ TAIL = 1
 HEAD = 2
 GREEN_APPLE = 3
 RED_APPLE = 4
+WALL = 5
 
 CHAR_MAP = {
     EMPTY: '0',

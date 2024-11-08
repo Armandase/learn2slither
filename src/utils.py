@@ -1,5 +1,6 @@
 import pygame
 import numpy as np
+import matplotlib.pyplot as plt
 from src.constants import UP, DOWN, LEFT, RIGHT, CHAR_MAP
 
 
@@ -58,3 +59,20 @@ def print_snake_vision(vision, grid):
     str_grid[:, y] = list(col_str)
 
     print("\n".join("".join(row) for row in str_grid))
+
+
+def analyse_scores(scores):
+    print(f"Max score: {max(scores)}")
+    print(f"Min score: {min(scores)}")
+    print(f"Mean score: {sum(scores) / len(scores):.2f}")
+    print(f"Standard deviation: {np.std(scores):.2f}")
+    print(f"Number of epochs: {len(scores)}")
+    print()
+
+def display_learning_curve(scores):
+    analyse_scores(scores)
+    plt.plot(range(len(scores)), scores)
+    plt.xlabel("Epochs")
+    plt.ylabel("Scores")
+    plt.title("Learning Curve")
+    plt.show()

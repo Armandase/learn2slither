@@ -4,12 +4,11 @@ from src.interpreter import game_state, step
 class SnakeAgent():
     def __init__(self, grid_size):
         self.discount_rate = 0.95
-        self.learning_rate = 0.1
+        self.learning_rate = 0.01
         self.eps = 1.0
-        self.eps_discount = 0.9992
+        self.eps_discount = 0.995
         self.min_eps = 0.001
-        # self.q_table = np.zeros((11, 11, 4))
-        self.q_table = np.zeros((grid_size * 2 + 2, 4))
+        self.q_table = np.zeros((grid_size, 4))
         self.prev_state = None
         self.prev_action = None
         self.score = 0
@@ -21,40 +20,37 @@ class SnakeAgent():
             return np.random.randint(0, 4)
         else:
             # exploitation
-            return np.argmax(q_table[np.astype(state, np.int32)])
+            return np.argmax(q_table[np.argmax(state)])
 
     def update_epsilon(self):
         self.eps = max(self.min_eps, self.eps * self.eps_discount)
     # np.astype(next_state, np.int32)
     def update_q_table(self, current_state, action, reward, next_state):
-        # if self.prev_state is not None:
-        #     cumulative_reward = self.discount_rate * np.max(self.q_table[np.astype(next_state, np.int32)])
-        #     calcul = self.learning_rate * (
-        #         reward + cumulative_reward - self.q_table[np.astype(self.prev_state, np.int32), self.prev_action]
-        #     )
-        #     self.q_table[np.astype(self.prev_state, np.int32), self.prev_action] += calcul
-        # self.prev_state = state
-        q_value = self.q_table[np.astype(current_state, np.int32)][action]
-        max_future_q = np.max(self.q_table[np.astype(next_state, np.int32)])
-        new_q_value = (1 - self.learning_rate) * q_value + self.learning_rate * (reward + self.discount_rate * max_future_q)
-        self.q_table[np.astype(current_state, np.int32)][action] = new_q_value
-
-        self.prev_action = action
+        # current_state_idx = tuple(current_state.astype(np.int32))
+        current_state_idx = np.max(current_state).astype(np.int32)
+        # next_state_idx = tuple(next_state.astype(np.int32))
+        next_state_idx = np.max(next_state).astype(np.int32)
+        max_future_q = np.max(self.q_table[next_state_idx])
+        # Bellman Equation Update
+        self.q_table[current_state_idx][action] = (1 - self.learning_rate)\
+            * self.q_table[current_state_idx][action] + self.learning_rate\
+            * (reward + self.discount_rate * max_future_q)
         self.score += reward
         self.steps += 1
-
     def reset(self):
         self.prev_state = None
         self.prev_action = None
         self.score = 0
         self.steps = 0
+    
+    def set_prev_state(self, state):
+        self.prev_state = state
 
     def train(self, epochs, grid):
         for epoch in range(epochs):
             self.reset()
             grid.reset_grid()
             self.state = game_state(grid)
-            print("State:", self.state.shape)
             done = False
             while not done:
                 action = self.get_action(self.state, self.q_table)
@@ -64,10 +60,11 @@ class SnakeAgent():
                 self.update_q_table(self.state, action, reward, next_state)
                 self.state = next_state
             self.update_epsilon()
-            print(f"Epoch {epoch + 1}/{epochs}")
-            print(f"Score: {self.score}")
-            print(f"Steps: {self.steps}")
-            print(f"Epsilon: {self.eps}")
+            # print("SHAPE!:", next_state.shape)
+            # print(f"Epoch {epoch + 1}/{epochs}")
+            # print(f"Score: {self.score}")
+            # print(f"Steps: {self.steps}")
+            # print(f"Epsilon: {self.eps}")
             print()
         print("Training finished.")
         print()

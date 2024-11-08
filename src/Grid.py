@@ -1,21 +1,29 @@
 import numpy as np
 from collections import deque
-from src.constants import DEFAULT_SIZE, HEAD, TAIL, GREEN_APPLE, RED_APPLE, EMPTY, DEAD
+from src.constants import DEFAULT_SIZE, HEAD, TAIL, GREEN_APPLE, RED_APPLE, EMPTY, DEAD, WALL
 from src.utils import dir_to_point
 
 
 class Grid():
     def __init__(self, size=DEFAULT_SIZE):
-        self.grid_size = size
+        # self.grid_size = size
+        self.total_grid_size = size + 2
         self.current_dir = None
 
-        self.board = np.zeros((size, size))
+        self.board = np.zeros((self.total_grid_size, self.total_grid_size))
 
         self.snake = deque()
         self.init_board()
 
+    def fill_border(self):
+        self.board[0, :] = WALL
+        self.board[-1, :] = WALL
+        self.board[:, 0] = WALL
+        self.board[:, -1] = WALL
+
     def init_board(self):
-        self.head_pos = np.random.randint(self.grid_size, size=2)
+        self.fill_border()
+        self.head_pos = np.random.randint(self.total_grid_size - 2, size=2) + 1
         self.board[tuple(self.head_pos)] = HEAD
         body = self.generate_around(self.head_pos)
         if body is None:
@@ -47,7 +55,7 @@ class Grid():
 
         for dx, dy in directions:
             new_x, new_y = pos[0] + dx, pos[1] + dy
-            if 0 <= new_x < 10 and 0 <= new_y < 10 and self.board[(new_x, new_y)] == EMPTY:
+            if 1 <= new_x < self.get_grid_size() - 1 and 1 <= new_y < self.get_grid_size() - 1 and self.board[(new_x, new_y)] == EMPTY:
                 available_pos.append([new_x, new_y])
 
         if available_pos:
@@ -68,7 +76,7 @@ class Grid():
         return None
 
     def get_grid_size(self):
-        return (self.grid_size)
+        return (self.total_grid_size)
 
     def get_current_dir(self):
         return (self.current_dir)
@@ -109,18 +117,13 @@ class Grid():
 
     def check_move(self, new_pos):
         # Check if the new position is out of bounds
-        if not (0 <= new_pos).all() or not (new_pos < self.grid_size).all() \
-            or self.board[tuple(new_pos)] == TAIL:
+        # if not (0 <= new_pos).all() or not (new_pos < self.grid_size).all() \
+        if self.board[tuple(new_pos)] == WALL or self.board[tuple(new_pos)] == TAIL:
             return DEAD
         return self.board[tuple(new_pos)]
-        # elif self.board[tuple(new_pos)] == GREEN_APPLE:
-        #     return GREEN_APPLE
-        # elif self.board[tuple(new_pos)] == RED_APPLE:
-        #     return RED_APPLE
-        # return EMPTY
 
     def reset_grid(self):
-        self.board = np.zeros((self.grid_size, self.grid_size))
+        self.board = np.zeros((self.total_grid_size, self.total_grid_size))
 
         self.snake = deque()
         self.init_board()

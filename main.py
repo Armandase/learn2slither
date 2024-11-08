@@ -16,7 +16,7 @@ def main(size=DEFAULT_SIZE, window_width=W_HEIGHT, window_height=W_WIDTH, epochs
     render = Render(window_width, window_height, size)
 
     # main_loop(render, grid, epochs)
-    agent = SnakeAgent(grid.grid_size)
+    agent = SnakeAgent(grid.get_grid_size())
     # agent.train(epochs, grid)
     # agent.train(grid, render, epochs)
     main_loop(render, grid, epochs, agent)
