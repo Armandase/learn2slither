@@ -23,7 +23,7 @@ class Grid():
 
     def init_board(self):
         self.fill_border()
-        self.head_pos = np.random.randint(self.total_grid_size - 2, size=2) + 1
+        self.head_pos = self.generate_empty_pos()
         self.board[tuple(self.head_pos)] = HEAD
         body = self.generate_around(self.head_pos)
         if body is None:
@@ -66,8 +66,7 @@ class Grid():
         return pos
 
     def generate_empty_pos(self):
-        empty_pos = np.argwhere(self.board == 0)
-
+        empty_pos = np.argwhere(self.board == EMPTY)
         if empty_pos.size > 0:
             random_empty_position = empty_pos[np.random.choice(len(empty_pos))]
             return random_empty_position
@@ -117,15 +116,17 @@ class Grid():
 
     def check_move(self, new_pos):
         # Check if the new position is out of bounds
-        # if not (0 <= new_pos).all() or not (new_pos < self.grid_size).all() \
-        if self.board[tuple(new_pos)] == WALL or self.board[tuple(new_pos)] == TAIL:
+        value_pos = self.board[tuple(new_pos)]
+        if not (0 <= new_pos).all() or not (new_pos < self.get_grid_size()).all() \
+            or value_pos == WALL or value_pos == TAIL:
             return DEAD
-        return self.board[tuple(new_pos)]
+        return value_pos
 
     def reset_grid(self):
         self.board = np.zeros((self.total_grid_size, self.total_grid_size))
 
         self.snake = deque()
+        self.head_pos = None
         self.init_board()
 
         self.current_dir = None

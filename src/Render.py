@@ -1,7 +1,7 @@
 import pygame
 from src.constants import W_WIDTH, W_HEIGHT, DEFAULT_SIZE, TITLE, \
-    TAIL, HEAD, GREEN_APPLE, RED_APPLE, \
-    COLORS_RED_APPLE, COLORS_GREEN_APPLE, COLORS_SNAKE, \
+    TAIL, HEAD, GREEN_APPLE, RED_APPLE, WALL, \
+    COLORS_RED_APPLE, COLORS_GREEN_APPLE, COLORS_SNAKE, COLORS_WALL, \
     COLORS_EMPTY, COLORS_LINES, COLORS_TOOLBAR, COLORS_SNAKE_HEAD, \
     IMAGE_PATH
 
@@ -15,7 +15,7 @@ class Render():
         pygame.display.set_caption(TITLE)
         self.window_width = w_width
         self.window_height = w_height
-        self.ratio = w_height / grid_size
+        self.ratio = w_height / (grid_size + 2)
         self.font = None
         self.toolbar_width = self.window_width - self.window_height
         self.load_image()
@@ -79,6 +79,9 @@ class Render():
                     self.screen.blit(self.img_red_apple, (x, y))
                 elif grid[row, col] == GREEN_APPLE:
                     self.screen.blit(self.img_green_apple, (x, y))
+                elif grid[row, col] == WALL:
+                    rect = pygame.Rect(x, y, self.ratio, self.ratio)
+                    pygame.draw.rect(self.screen, COLORS_WALL, rect)
                 else:
                     rect = pygame.Rect(x, y, self.ratio, self.ratio)
                     pygame.draw.rect(self.screen, COLORS_EMPTY, rect)

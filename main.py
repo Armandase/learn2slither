@@ -12,13 +12,11 @@ def main(size=DEFAULT_SIZE, window_width=W_HEIGHT, window_height=W_WIDTH, epochs
         raise Exception("Window height should inferior than width")
     if window_width - window_height < window_width * 0.1:
         raise Exception("The minimal ratio between window width and height isn't respected")
+    
     grid = Grid(size)
     render = Render(window_width, window_height, size)
-
-    # main_loop(render, grid, epochs)
     agent = SnakeAgent(grid.get_grid_size())
-    # agent.train(epochs, grid)
-    # agent.train(grid, render, epochs)
+
     main_loop(render, grid, epochs, agent)
 
 

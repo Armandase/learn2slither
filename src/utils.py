@@ -9,8 +9,10 @@ def dir_to_point(dir):
         return np.array([0, 0])
 
     if dir == UP:
+        # return np.array([1, 0])
         return np.array([-1, 0])
     elif dir == DOWN:
+        # return np.array([-1, 0])
         return np.array([1, 0])
     elif dir == LEFT:
         return np.array([0, -1])
@@ -20,7 +22,7 @@ def dir_to_point(dir):
         return np.array([0, 0])
 
 
-def handle_keys(keys, grid):
+def dir_from_keys(keys, grid):
     current_dir = grid.get_current_dir()
     next_dir = grid.get_current_dir()
 
@@ -32,11 +34,7 @@ def handle_keys(keys, grid):
         next_dir = LEFT
     elif (keys[pygame.K_d] or keys[pygame.K_RIGHT]) and current_dir != LEFT:
         next_dir = RIGHT
-    elif keys[pygame.K_ESCAPE]:
-        return False
-
-    grid.update_board(next_dir)
-    return True
+    return next_dir
 
 
 def convert_vec_to_str(vec):
