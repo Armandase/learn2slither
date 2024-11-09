@@ -1,8 +1,5 @@
 import numpy as np
-import random
-import pickle
-from src.interpreter import game_state, step
-from src.constants import LEARNING_RATE, DISCOUNT_RATE, EPSILON, EPSILON_DISCOUNT, MIN_EPSILON
+
 
 class SnakeAgent():
     def __init__(self, grid_size):
@@ -11,7 +8,8 @@ class SnakeAgent():
         self.eps = 0.1
         self.eps_discount = 0.995
         self.min_eps = 0.001
-        self.q_table = np.zeros((2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4))
+        self.q_table = \
+            np.zeros((2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4))
         self.grid_size = grid_size
         self.prev_state = None
         self.score = 0

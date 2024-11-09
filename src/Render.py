@@ -20,7 +20,6 @@ class Render():
         self.toolbar_width = self.window_width - self.window_height
         self.load_image()
 
-
     def __del__(self):
         pygame.quit()
 
@@ -35,7 +34,6 @@ class Render():
         self.img_snake_tail = pygame.transform.scale(self.img_snake_tail, (self.ratio, self.ratio))
         self.img_red_apple = pygame.transform.scale(self.img_red_apple, (self.ratio, self.ratio))
         self.img_green_apple = pygame.transform.scale(self.img_green_apple, (self.ratio, self.ratio))
-
 
     def get_screen(self):
         return self.screen

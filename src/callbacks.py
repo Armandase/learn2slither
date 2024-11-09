@@ -2,6 +2,7 @@ import numpy as np
 from prettytable import PrettyTable
 from src.constants import MODELS_PATH
 
+
 def display_training_info(epochs, epoch, every_length, every_reward):
     if epoch % 25 != 0:
         return
@@ -14,6 +15,7 @@ def display_training_info(epochs, epoch, every_length, every_reward):
     every_length.clear()
     every_reward.clear()
     print(table)
+
 
 def save_q_table(q_table, nb_epoch, scores, path=MODELS_PATH):
     path = f"{path}/q_table_e{nb_epoch}.npy"

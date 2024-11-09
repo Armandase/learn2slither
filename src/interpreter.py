@@ -4,14 +4,13 @@ from src.constants import LEFT, RIGHT, UP, DOWN, \
     REWARD_MAP, DEAD, EMPTY, WALL, GREEN_APPLE, RED_APPLE, TAIL
 
 
-
 def game_state(grid):
     board = grid.get_board()
     x, y = grid.get_head_pos()
 
     grid_size = grid.get_grid_size()
     state = [
-        close_to_death(x, y, LEFT, board, grid_size ),
+        close_to_death(x, y, LEFT, board, grid_size),
         close_to_death(x, y, RIGHT, board, grid_size),
         close_to_death(x, y, UP, board, grid_size),
         close_to_death(x, y, DOWN, board, grid_size),
@@ -50,6 +49,7 @@ def step(action, grid):
 
     return get_reward(new_case), (True if new_case == DEAD else False)
 
+
 def is_obj_in_dir(grid, dir, obj):
     x, y = grid.get_head_pos()
 
@@ -62,6 +62,7 @@ def is_obj_in_dir(grid, dir, obj):
         if x + x_dir * diff_x == x_obj and y + y_dir * diff_y == y_obj:
             return True
     return False
+
 
 def close_to_death(x, y, dir, board, grid_size):
     x_dir, y_dir = dir_to_point(dir)

@@ -5,6 +5,7 @@ from src.constants import UP, DOWN, LEFT, RIGHT, CHAR_MAP, MODELS_PATH
 import os
 from natsort import natsorted
 
+
 def last_trained_model():
     models = os.listdir(MODELS_PATH)
     if len(models) == 0:
@@ -12,6 +13,7 @@ def last_trained_model():
     last_model = os.path.join(MODELS_PATH, natsorted(models)[-1])
     print(f"Last trained model: {last_model}")
     return last_model
+
 
 def dir_to_point(dir):
     if dir is None:
@@ -75,6 +77,7 @@ def analyse_scores(scores):
     print(f"Standard deviation: {np.std(scores):.2f}")
     print(f"Number of epochs: {len(scores)}")
     print()
+
 
 def display_learning_curve(scores):
     analyse_scores(scores)

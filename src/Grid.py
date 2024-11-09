@@ -1,6 +1,7 @@
 import numpy as np
 from collections import deque
-from src.constants import DEFAULT_SIZE, HEAD, TAIL, GREEN_APPLE, RED_APPLE, EMPTY, DEAD, WALL
+from src.constants import DEFAULT_SIZE, HEAD, TAIL, GREEN_APPLE, \
+    RED_APPLE, EMPTY, DEAD, WALL
 from src.utils import dir_to_point
 
 
@@ -55,7 +56,9 @@ class Grid():
 
         for dx, dy in directions:
             new_x, new_y = pos[0] + dx, pos[1] + dy
-            if 1 <= new_x < self.get_grid_size() - 1 and 1 <= new_y < self.get_grid_size() - 1 and self.board[(new_x, new_y)] == EMPTY:
+            if 1 <= new_x < self.get_grid_size() - 1 \
+                    and 1 <= new_y < self.get_grid_size() - 1 \
+                    and self.board[(new_x, new_y)] == EMPTY:
                 available_pos.append([new_x, new_y])
 
         if available_pos:
@@ -119,8 +122,9 @@ class Grid():
     def check_move(self, new_pos):
         # Check if the new position is out of bounds
         value_pos = self.board[tuple(new_pos)]
-        if not (0 <= new_pos).all() or not (new_pos < self.get_grid_size()).all() \
-            or value_pos == WALL or value_pos == TAIL:
+        if not (0 <= new_pos).all() \
+            or not (new_pos < self.get_grid_size()).all() \
+                or value_pos == WALL or value_pos == TAIL:
             return DEAD
         return value_pos
 

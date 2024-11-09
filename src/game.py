@@ -1,9 +1,8 @@
 import pygame
 
-from src.utils import dir_from_keys, analyse_scores, display_learning_curve, last_trained_model
+from src.utils import dir_from_keys, analyse_scores, \
+    display_learning_curve, last_trained_model
 from src.constants import GAME_SPEED, DEAD, WALL, TAIL
-from src.SnakeAgent import SnakeAgent
-from src.Grid import Grid
 from src.interpreter import game_state, step
 from src.callbacks import display_training_info, save_q_table
 
@@ -78,12 +77,12 @@ def main_loop(render, grid, epochs, agent):
         next_dir = dir_from_keys(keys, grid)
         new_case = grid.update_board(next_dir)
         if new_case == DEAD or new_case == WALL or new_case == TAIL:
+            print("Final score:", grid.get_snake_len())
             print("Game over")
             running = False
-        
+
         render.draw_grid(grid.board)
         render.display_toolbar(grid.get_snake_len(), grid.get_grid_size())
 
         clock.tick(GAME_SPEED + (grid.get_snake_len() // 3))
         pygame.display.flip()
-
