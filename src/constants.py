@@ -6,6 +6,7 @@ TITLE = "learn2slither"
 GAME_SPEED = 7
 EPOCHS = 10000
 IMAGE_PATH = 'assets/geometry_dark/'
+MODELS_PATH = 'models/'
 
 DEAD = -1
 EMPTY = 0
@@ -24,10 +25,10 @@ CHAR_MAP = {
 }
 
 REWARD_MAP = {
-    EMPTY: -0.1,
+    EMPTY: -1,
     TAIL: -10,
-    GREEN_APPLE: 5,
-    RED_APPLE: -2,
+    GREEN_APPLE: 10,
+    RED_APPLE: -5,
     DEAD: -10
 }
 
@@ -45,8 +46,8 @@ COLORS_LINES = (0, 0, 0)
 COLORS_WALL = (0, 0, 0)
 COLORS_TOOLBAR = (80, 0, 80)
 
-LEARNING_RATE = 0.1
-DISCOUNT_RATE = 0.9
+LEARNING_RATE = 0.01
+DISCOUNT_RATE = 0.95
 EPSILON = 1.0
 EPSILON_DISCOUNT = 0.995
-MIN_EPSILON = 0.01
+MIN_EPSILON = 0.001

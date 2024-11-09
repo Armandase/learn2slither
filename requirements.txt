@@ -1,4 +1,6 @@
 numpy
 pygame
 flake8
-matplotlib  
+matplotlib
+prettytable
+natsort

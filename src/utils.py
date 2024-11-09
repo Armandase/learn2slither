@@ -1,8 +1,17 @@
 import pygame
 import numpy as np
 import matplotlib.pyplot as plt
-from src.constants import UP, DOWN, LEFT, RIGHT, CHAR_MAP
+from src.constants import UP, DOWN, LEFT, RIGHT, CHAR_MAP, MODELS_PATH
+import os
+from natsort import natsorted
 
+def last_trained_model():
+    models = os.listdir(MODELS_PATH)
+    if len(models) == 0:
+        return None
+    last_model = os.path.join(MODELS_PATH, natsorted(models)[-1])
+    print(f"Last trained model: {last_model}")
+    return last_model
 
 def dir_to_point(dir):
     if dir is None:

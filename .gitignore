@@ -1,5 +1,6 @@
 en.subject.pdf
 learn2slither.py
+models/
 .venv/
 __pycache__/
 .ipynb_checkpoints/
