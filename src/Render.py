@@ -18,6 +18,7 @@ class Render():
         self.ratio = w_height / (grid_size + 2)
         self.font = None
         self.toolbar_width = self.window_width - self.window_height
+        self.button_height = self.window_height // 10
         self.load_image()
 
     def __del__(self):
@@ -86,7 +87,6 @@ class Render():
 
                 pygame.draw.rect(self.screen, COLORS_LINES, pygame.Rect(x, y, self.ratio, self.ratio), 1)
 
-
     def display_toolbar(self, score, grid_size):
         rect = pygame.Rect(
                     self.window_height, 0,
@@ -96,21 +96,62 @@ class Render():
         self.display_score(score, grid_size)
 
     def display_score(self, score, grid_size):
-        # achievement = 'noob'
-        # if score > grid_size:
-        #     achievement = 'monkey'
-        # elif score > grid_size * 2:
-        #     achievement = 'mid'
-        # elif score > grid_size * 4:
-        #     achievement = 'pro'
-        # elif score > grid_size * 6:
-        #     achievement = 'god'
-        # elif score > grid_size * 7:
-        #     achievement = 'baka'
         score_str = f'Score: {score}'
 
         if self.font is None:
-            self.font = pygame.font.Font(None, self.toolbar_width // len(score_str) * 2)
+            self.font = pygame.font.Font(None, int(self.button_height * 1.25))
         score_text = self.font.render(score_str, True, COLORS_EMPTY, COLORS_LINES)
 
-        self.screen.blit(score_text, (self.window_height + 10, 10))
+        self.screen.blit(score_text, (self.window_height + 10, 10), (0, 0, self.window_width, self.button_height))
+        self.update_speed()
+
+    def update_speed(self):
+        speed_up_str = "faster"
+        speed_down_str = "slower"
+        if self.font is None:
+            self.font = pygame.font.Font(None, int(self.button_height * 1.25))
+
+        speed_up_txt = self.font.render(speed_up_str, True, COLORS_EMPTY, COLORS_LINES)
+        speed_down_txt = self.font.render(speed_down_str, True, COLORS_EMPTY, COLORS_LINES)
+
+        self.screen.blit(speed_up_txt, (self.window_height + 10, self.button_height))
+        self.screen.blit(speed_down_txt, (self.window_height + 10, self.button_height * 2))
+
+    def mean_scores(self, scores):
+        length_block = len(scores) // 10
+        complement = len(scores) % 10
+
+        avg_scores = []
+
+        for i in range(10):
+            if i < complement:
+                avg_scores.append(sum(scores[(i * length_block) + i:((i + 1) * length_block) + i]))
+            else:
+                avg_scores.append(sum(scores[i * length_block:(i + 1) * length_block]))
+        return avg_scores
+
+    def display_curve(self, scores):
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.backends.backend_agg as agg
+        import pylab
+
+        fig = pylab.figure(figsize=[4, 4], dpi=self.button_height,)
+        ax = fig.gca()
+        if len(scores) > 10:
+            ax.plot(self.mean_scores(scores))
+        else:
+            ax.plot(scores)
+        ax.set_title("Mobile average")
+
+        canvas = agg.FigureCanvasAgg(fig)
+        canvas.draw()
+        renderer = canvas.get_renderer()
+        raw_data = renderer.tostring_rgb()
+
+        size = canvas.get_width_height()
+
+        surf = pygame.image.fromstring(raw_data, size, "RGB")
+        self.screen.blit(surf, (self.window_height + 20, self.window_height - self.button_height * 4))
+        matplotlib.pyplot.close()
+

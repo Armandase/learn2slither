@@ -20,10 +20,8 @@ def dir_to_point(dir):
         return np.array([0, 0])
 
     if dir == UP:
-        # return np.array([1, 0])
         return np.array([-1, 0])
     elif dir == DOWN:
-        # return np.array([-1, 0])
         return np.array([1, 0])
     elif dir == LEFT:
         return np.array([0, -1])
@@ -71,6 +69,8 @@ def print_snake_vision(vision, grid):
 
 
 def analyse_scores(scores):
+    if len(scores) == 0:
+        return
     print(f"Max score: {max(scores)}")
     print(f"Min score: {min(scores)}")
     print(f"Mean score: {sum(scores) / len(scores):.2f}")

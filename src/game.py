@@ -2,12 +2,12 @@ import pygame
 
 from src.utils import dir_from_keys, analyse_scores, \
     display_learning_curve, last_trained_model
-from src.constants import GAME_SPEED, DEAD, WALL, TAIL
+from src.constants import GAME_SPEED, DEAD, WALL, TAIL, DEFAULT_VISUAL
 from src.interpreter import game_state, step
 from src.callbacks import display_training_info, save_q_table
 
 
-def train_agent(agent, grid, render, epochs):
+def train_agent(agent, grid, render, epochs, visual_mode=DEFAULT_VISUAL):
     print("Training agent...")
     scores = []
     avg_length = []
@@ -22,10 +22,6 @@ def train_agent(agent, grid, render, epochs):
         agent.update_epsilon()
         done = False
         while not done:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    display_learning_curve(scores)
-                    exit()
             action = agent.get_action(current_state)
             reward, done = step(action, grid)
             next_state = game_state(grid)
@@ -35,8 +31,16 @@ def train_agent(agent, grid, render, epochs):
             current_state = next_state
             length = grid.get_snake_len()
 
+            if visual_mode is False:
+                continue
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    display_learning_curve(scores)
+                    exit()
+
             render.draw_grid(grid.board)
             render.display_toolbar(length, grid.get_grid_size())
+            render.display_curve(scores)
 
             keys = pygame.key.get_pressed()
             if keys[pygame.K_ESCAPE]:
@@ -49,15 +53,15 @@ def train_agent(agent, grid, render, epochs):
         avg_length.append(grid.get_snake_len())
         avg_reward.append(agent.score)
         display_training_info(epochs, epoch, avg_length, avg_reward)
-        if epoch % 500 == 0:
-            save_q_table(agent.q_table, epoch, scores)
+        # if epoch % 500 == 0:
+            # save_q_table(agent.q_table, epoch, scores)
         scores.append(agent.score)
         epoch += 1
     analyse_scores(scores)
     display_learning_curve(scores)
 
 
-def main_loop(render, grid, epochs, agent):
+def main_loop(render, grid, epochs, agent, visual_mode=DEFAULT_VISUAL):
     global clock
     clock = pygame.time.Clock()
     running = True
@@ -83,6 +87,5 @@ def main_loop(render, grid, epochs, agent):
 
         render.draw_grid(grid.board)
         render.display_toolbar(grid.get_snake_len(), grid.get_grid_size())
-
         clock.tick(GAME_SPEED + (grid.get_snake_len() // 3))
         pygame.display.flip()
