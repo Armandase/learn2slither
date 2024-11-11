@@ -2,7 +2,7 @@ import numpy as np
 
 
 class SnakeAgent():
-    def __init__(self, grid_size):
+    def __init__(self, grid_size, train=True):
         self.discount_rate = 0.9
         self.learning_rate = 0.1
         self.eps = 0.1
@@ -13,10 +13,21 @@ class SnakeAgent():
         self.grid_size = grid_size
         self.prev_state = None
         self.score = 0
+        self.best_score = -np.inf
         self.steps = 0
+        self.train_agent = train
 
     def get_score(self):
         return self.score
+
+    def get_best_score(self):
+        return self.score
+
+    def check_best_score(self, score):
+        if score > self.best_score:
+            self.best_score = score
+            return True
+        return False
 
     def get_steps(self):
         return self.steps
@@ -31,6 +42,8 @@ class SnakeAgent():
         self.eps = max(self.min_eps, self.eps * self.eps_discount)
 
     def update_q_table(self, current_state, action, reward, next_state):
+        if self.train_agent is False:
+            return
         current_state_tuple = tuple(current_state)
         next_state_tuple = tuple(next_state)
 

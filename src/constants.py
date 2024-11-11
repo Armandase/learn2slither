@@ -17,12 +17,24 @@ GREEN_APPLE = 3
 RED_APPLE = 4
 WALL = 5
 
+UP = 0
+DOWN = 1
+LEFT = 2
+RIGHT = 3
+
 CHAR_MAP = {
     EMPTY: '0',
     TAIL: 'S',
     HEAD: 'H',
     GREEN_APPLE: 'G',
     RED_APPLE: 'R'
+}
+
+DIR_MAP = {
+    UP: "UP",
+    DOWN: "DOWN",
+    LEFT: "LEFT",
+    RIGHT: "RIGHT"
 }
 
 REWARD_MAP = {
@@ -32,11 +44,6 @@ REWARD_MAP = {
     RED_APPLE: -5,
     DEAD: -10
 }
-
-UP = 0
-DOWN = 1
-LEFT = 2
-RIGHT = 3
 
 COLORS_RED_APPLE = (255, 0, 0)
 COLORS_GREEN_APPLE = (0, 255, 0)
@@ -52,3 +59,5 @@ DISCOUNT_RATE = 0.95
 EPSILON = 1.0
 EPSILON_DISCOUNT = 0.995
 MIN_EPSILON = 0.001
+
+METRICS_CALLBACK = 25

@@ -1,23 +1,31 @@
 import numpy as np
 from prettytable import PrettyTable
-from src.constants import MODELS_PATH
+from src.constants import MODELS_PATH, METRICS_CALLBACK
 
 
-def display_training_info(epochs, epoch, every_length, every_reward):
-    if epoch % 25 != 0:
+def display_training_info(epochs, epoch, sum_length, sum_reward):
+    if epoch % METRICS_CALLBACK != 0:
         return
-    mean_length = sum(every_length) / len(every_length)
-    mean_reward = sum(every_reward) / len(every_reward)
+    sum_length /= METRICS_CALLBACK
+    sum_reward /= METRICS_CALLBACK
     table = PrettyTable()
     table.title = f"Epochs {epoch}/{epochs}"
     table.field_names = ["Length", "Reward"]
-    table.add_row([mean_length, mean_reward])
-    every_length.clear()
-    every_reward.clear()
+    table.add_row([sum_length, sum_reward])
+    sum_length = 0
+    sum_length = 0
     print(table)
 
 
-def save_q_table(q_table, nb_epoch, scores, path=MODELS_PATH):
-    path = f"{path}/q_table_e{nb_epoch}.npy"
+def save_q_table(q_table, nb_epoch, path=MODELS_PATH):
+    path = f"{path}q_table_e{nb_epoch}.npy"
     np.save(path, q_table)
     print(f"Q-table saved at {path}")
+
+
+def save_best_model(agent, score, path=MODELS_PATH):
+    if agent.check_best_score(score) is False:
+        return
+    path = f"{path}/q_table_best_model.npy"
+    np.save(path, agent.q_table)
+    print("New best models has been saved")

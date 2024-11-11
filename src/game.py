@@ -1,20 +1,18 @@
 import pygame
 
 from src.utils import dir_from_keys, analyse_scores, \
-    display_learning_curve, last_trained_model
-from src.constants import GAME_SPEED, DEAD, WALL, TAIL, DEFAULT_VISUAL
+    display_learning_curve
+from src.constants import GAME_SPEED, DEAD, WALL, TAIL, DEFAULT_VISUAL, DIR_MAP
 from src.interpreter import game_state, step
-from src.callbacks import display_training_info, save_q_table
+from src.callbacks import display_training_info, save_q_table, save_best_model
 
 
 def train_agent(agent, grid, render, epochs, visual_mode=DEFAULT_VISUAL):
-    print("Training agent...")
     scores = []
-    avg_length = []
-    avg_reward = []
+    sum_reward = 0
+    sum_length = 0
     epoch = 0
     running = False
-    agent.load_model(last_trained_model())
     while epoch < epochs and not running:
         agent.reset()
         grid.reset_grid()
@@ -23,10 +21,11 @@ def train_agent(agent, grid, render, epochs, visual_mode=DEFAULT_VISUAL):
         done = False
         while not done:
             action = agent.get_action(current_state)
+            print(DIR_MAP[action])
             reward, done = step(action, grid)
             next_state = game_state(grid)
 
-            # agent.update_q_table(current_state, action, reward, next_state)
+            agent.update_q_table(current_state, action, reward, next_state)
             agent.update_metrics(reward)
             current_state = next_state
             length = grid.get_snake_len()
@@ -50,18 +49,20 @@ def train_agent(agent, grid, render, epochs, visual_mode=DEFAULT_VISUAL):
 
             clock.tick(GAME_SPEED + length // 3)
             pygame.display.flip()
-        avg_length.append(grid.get_snake_len())
-        avg_reward.append(agent.score)
-        display_training_info(epochs, epoch, avg_length, avg_reward)
-        # if epoch % 500 == 0:
-            # save_q_table(agent.q_table, epoch, scores)
+        sum_length += grid.get_snake_len()
+        sum_reward += agent.score
+        display_training_info(epochs, epoch, sum_length, sum_reward)
+        if agent.train_agent is True:
+            save_best_model(agent, agent.score)
+            if epoch % 500 == 0:
+                save_q_table(agent.q_table, epoch)
         scores.append(agent.score)
         epoch += 1
     analyse_scores(scores)
     display_learning_curve(scores)
 
 
-def main_loop(render, grid, epochs, agent, visual_mode=DEFAULT_VISUAL):
+def main_loop(render, grid, epochs, agent):
     global clock
     clock = pygame.time.Clock()
     running = True
@@ -72,7 +73,6 @@ def main_loop(render, grid, epochs, agent, visual_mode=DEFAULT_VISUAL):
                 running = False
 
         keys = pygame.key.get_pressed()
-        # train_agent(agent, grid, render, epochs)
         if keys[pygame.K_SPACE]:
             train_agent(agent, grid, render, epochs)
         if keys[pygame.K_ESCAPE]:
