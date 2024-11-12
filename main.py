@@ -3,7 +3,8 @@ import argparse
 from src.Render import Render
 from src.Grid import Grid
 from src.game import main_loop, train_agent
-from src.constants import DEFAULT_SIZE, W_HEIGHT, W_WIDTH, EPOCHS, DEFAULT_VISUAL
+from src.constants import DEFAULT_SIZE, \
+    W_HEIGHT, W_WIDTH, EPOCHS, DEFAULT_VISUAL
 from src.SnakeAgent import SnakeAgent
 
 
@@ -13,7 +14,8 @@ def main(size=DEFAULT_SIZE, window_width=W_HEIGHT,
     if window_height > window_width:
         raise Exception("Window height should inferior than width")
     if window_width - window_height < window_width * 0.1:
-        raise Exception("The minimal ratio between window width and height isn't respected")
+        raise Exception("The minimal ratio \
+                        between window width and height isn't respected")
 
     grid = Grid(size)
     print("Train:", train)
@@ -34,7 +36,8 @@ if __name__ == '__main__':
     argparser.add_argument('--epochs', '-e', type=int, default=EPOCHS)
     argparser.add_argument('--model', '-m', type=str, default=None)
     # --no-train to disable
-    argparser.add_argument('--train', default=True, action=argparse.BooleanOptionalAction)
+    argparser.add_argument('--train', default=True,
+                           action=argparse.BooleanOptionalAction)
     argparser.add_argument('--window_width', '-ww',
                            type=int, default=W_WIDTH)
     argparser.add_argument('--window_height', '-wh',

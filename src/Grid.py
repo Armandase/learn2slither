@@ -91,7 +91,8 @@ class Grid():
 
     def update_board(self, next_dir):
         new_pos = dir_to_point(next_dir)
-        # if self.current_dir is None and (self.snake[-1] + new_pos == self.snake[-2]).all():
+        # if self.current_dir is None \
+        #   and (self.snake[-1] + new_pos == self.snake[-2]).all():
         #     return EMPTY
 
         self.head_pos = self.snake[-1] + new_pos
