@@ -27,7 +27,8 @@ CHAR_MAP = {
     TAIL: 'S',
     HEAD: 'H',
     GREEN_APPLE: 'G',
-    RED_APPLE: 'R'
+    RED_APPLE: 'R',
+    WALL: 'W'
 }
 
 DIR_MAP = {

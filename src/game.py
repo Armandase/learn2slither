@@ -1,7 +1,7 @@
 import pygame
 
 from src.utils import dir_from_keys, analyse_scores, \
-    display_learning_curve
+    display_learning_curve, print_snake_vision
 from src.constants import GAME_SPEED, DEAD, WALL, TAIL, DEFAULT_VISUAL, DIR_MAP
 from src.interpreter import game_state, step
 from src.callbacks import display_training_info, save_q_table, save_best_model
@@ -22,6 +22,7 @@ def train_agent(agent, grid, render, epochs, visual_mode=DEFAULT_VISUAL):
         while not done:
             action = agent.get_action(current_state)
             print(DIR_MAP[action])
+            print_snake_vision(grid)
             reward, done = step(action, grid)
             next_state = game_state(grid)
 
