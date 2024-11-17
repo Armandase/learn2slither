@@ -3,13 +3,13 @@ import numpy as np
 
 class SnakeAgent():
     def __init__(self, grid_size, train=True):
-        self.discount_rate = 0.9
+        self.discount_rate = 0.99
         self.learning_rate = 0.1
         self.eps = 0.1
         self.eps_discount = 0.995
         self.min_eps = 0.001
         self.q_table = \
-            np.zeros((2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4))
+            np.zeros((5, 5, 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 4))
         self.grid_size = grid_size
         self.prev_state = None
         self.score = 0

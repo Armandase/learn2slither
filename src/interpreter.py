@@ -10,18 +10,14 @@ def game_state(grid):
 
     grid_size = grid.get_grid_size()
     state = [
-        close_to_death(x, y, LEFT, board, grid_size),
+        next_obj_in_dir(grid, LEFT),
+        next_obj_in_dir(grid, RIGHT),
+        next_obj_in_dir(grid, UP),
+        next_obj_in_dir(grid, DOWN),
+        close_to_death(x, y, LEFT, board, grid_size),  # left dangerous ?
         close_to_death(x, y, RIGHT, board, grid_size),
         close_to_death(x, y, UP, board, grid_size),
         close_to_death(x, y, DOWN, board, grid_size),
-        is_obj_in_dir(grid, LEFT, GREEN_APPLE),
-        is_obj_in_dir(grid, RIGHT, GREEN_APPLE),
-        is_obj_in_dir(grid, UP, GREEN_APPLE),
-        is_obj_in_dir(grid, DOWN, GREEN_APPLE),
-        is_obj_in_dir(grid, LEFT, RED_APPLE),
-        is_obj_in_dir(grid, RIGHT, RED_APPLE),
-        is_obj_in_dir(grid, UP, RED_APPLE),
-        is_obj_in_dir(grid, DOWN, RED_APPLE),
         grid.get_current_dir() == LEFT,
         grid.get_current_dir() == RIGHT,
         grid.get_current_dir() == UP,
@@ -62,6 +58,23 @@ def is_obj_in_dir(grid, dir, obj):
         if x + x_dir * diff_x == x_obj and y + y_dir * diff_y == y_obj:
             return True
     return False
+
+
+def next_obj_in_dir(grid, dir):
+    x, y = grid.get_head_pos()
+    size = grid.get_grid_size()
+    board = grid.get_board()
+    x_dir, y_dir = dir_to_point(dir)
+
+    x += x_dir
+    y += y_dir
+
+    while 0 < x < size and 0 < y < size:
+        if board[x, y] != EMPTY:
+            return board[x, y] - 1
+        x += x_dir
+        y += y_dir
+    return WALL - 1
 
 
 def close_to_death(x, y, dir, board, grid_size):
