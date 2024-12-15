@@ -38,6 +38,9 @@ class SnakeAgent():
         else:
             return np.argmax(self.q_table[tuple(state)])
 
+    def get_true_action(self, state):
+        return np.argmax(self.q_table[tuple(state)])
+
     def update_epsilon(self):
         self.eps = max(self.min_eps, self.eps * self.eps_discount)
 

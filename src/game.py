@@ -5,9 +5,12 @@ from src.utils import dir_from_keys, analyse_scores, \
 from src.constants import GAME_SPEED, DEAD, WALL, TAIL, DEFAULT_VISUAL, DIR_MAP, METRICS_CALLBACK
 from src.interpreter import game_state, step
 from src.callbacks import display_training_info, save_q_table, save_best_model
+from src.SnakeAgent import SnakeAgent
+from src.Grid import Grid
+from src.Render import Render
 
 
-def train_agent(agent, grid, render, epochs, visual_mode=DEFAULT_VISUAL, verbose=False):
+def train_agent(agent: SnakeAgent, grid, render, epochs, visual_mode=DEFAULT_VISUAL, verbose=False):
     scores = []
     sum_reward = 0
     sum_length = 0
@@ -57,17 +60,52 @@ def train_agent(agent, grid, render, epochs, visual_mode=DEFAULT_VISUAL, verbose
             display_training_info(epochs, epoch, sum_length, sum_reward)
             sum_length = 0
             sum_reward = 0
-        if agent.train_agent is True:
-            save_best_model(agent, agent.score)
-            if epoch % 500 == 0:
-                save_q_table(agent.q_table, epoch)
+        save_best_model(agent, agent.score)
+        if epoch % 500 == 0:
+            save_q_table(agent.q_table, epoch)
         scores.append(agent.score)
         epoch += 1
     analyse_scores(scores)
     display_learning_curve(scores)
 
+def test_agent(agent: SnakeAgent, grid: Grid, render: Render, visual_mode=DEFAULT_VISUAL, verbose=False):
+    agent.reset()
+    grid.reset_grid()
+    current_state = game_state(grid)
+    done = False
+    while not done:
+        action = agent.get_true_action(current_state)
+        if verbose is True:
+            print(DIR_MAP[action])
+            print_snake_vision(grid)
+        _, done = step(action, grid)
+        next_state = game_state(grid)
 
-def main_loop(render, grid, epochs, agent, visual=DEFAULT_VISUAL, verbose=False):
+        current_state = next_state
+        length = grid.get_snake_len()
+
+        if visual_mode is False:
+            continue
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                exit()
+
+        render.draw_grid(grid.board)
+        render.display_toolbar(length, grid.get_grid_size())
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_ESCAPE]:
+            exit()
+
+        clock.tick(GAME_SPEED + length // 3)
+        pygame.display.flip()
+    print("Final score:", agent.score)
+    print("Final length:", grid.get_snake_len())
+    print("Game over")
+    agent.reset()
+    grid.reset_grid()
+
+def main_loop(render: Render, grid: Grid, epochs, agent: SnakeAgent, visual=DEFAULT_VISUAL, verbose=False):
     global clock
     clock = pygame.time.Clock()
     running = True
@@ -78,8 +116,10 @@ def main_loop(render, grid, epochs, agent, visual=DEFAULT_VISUAL, verbose=False)
                 running = False
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_SPACE] and agent.train_agent is True:
             train_agent(agent, grid, render, epochs, visual, verbose)
+        if keys[pygame.K_SPACE] and agent.train_agent is False:
+            test_agent(agent, grid, render, visual, verbose)
         if keys[pygame.K_ESCAPE]:
             running = False
 
