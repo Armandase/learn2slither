@@ -4,13 +4,13 @@ from src.Render import Render
 from src.Grid import Grid
 from src.game import main_loop, train_agent
 from src.constants import DEFAULT_SIZE, \
-    W_HEIGHT, W_WIDTH, EPOCHS, DEFAULT_VISUAL
+    W_HEIGHT, W_WIDTH, EPOCHS, DEFAULT_VISUAL, GAME_SPEED
 from src.SnakeAgent import SnakeAgent
 
 
 def main(size=DEFAULT_SIZE, window_width=W_HEIGHT,
          window_height=W_WIDTH, epochs=EPOCHS, visual_mode=DEFAULT_VISUAL,
-         model=None, train=True, verbose=False):
+         model=None, train=True, verbose=False, step_by_step=False):
     if window_height > window_width:
         raise Exception("Window height should inferior than width")
     if window_width - window_height < window_width * 0.1:
@@ -26,7 +26,7 @@ def main(size=DEFAULT_SIZE, window_width=W_HEIGHT,
         train_agent(agent, grid, None, epochs, visual_mode, verbose)
     else:
         render = Render(window_width, window_height, size)
-        main_loop(render, grid, epochs, agent, visual_mode, verbose)
+        main_loop(render, grid, epochs, agent, visual_mode, verbose, step_by_step)
 
 
 if __name__ == '__main__':
@@ -42,14 +42,17 @@ if __name__ == '__main__':
                            action=argparse.BooleanOptionalAction)
     argparser.add_argument('--visual', default=True,
                            action=argparse.BooleanOptionalAction)
+    argparser.add_argument('--step_by_step', default=False,
+                           action=argparse.BooleanOptionalAction)
+    
     argparser.add_argument('--window_width', '-ww',
                            type=int, default=W_WIDTH)
     argparser.add_argument('--window_height', '-wh',
                            type=int, default=W_HEIGHT)
-    args = argparser.parse_args()
-    # try:
+    try:
+        args = argparser.parse_args()
 
-    main(args.size, args.window_width, args.window_height,
-         args.epochs, args.visual, args.model, args.train, args.verbose)
-    # except Exception as e:
-        # print('Error:', e)
+        main(args.size, args.window_width, args.window_height,
+             args.epochs, args.visual, args.model, args.train, args.verbose, args.step_by_step)
+    except Exception as e:
+        print('Error:', e)

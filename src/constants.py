@@ -4,7 +4,7 @@ DEFAULT_SIZE = 10
 DEFAULT_VISUAL = True
 TITLE = "learn2slither"
 
-GAME_SPEED = 7
+GAME_SPEED = 100000
 EPOCHS = 10000
 IMAGE_PATH = 'assets/geometry_dark/'
 MODELS_PATH = 'models/'

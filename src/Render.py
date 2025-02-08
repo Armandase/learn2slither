@@ -3,7 +3,7 @@ from src.constants import W_WIDTH, W_HEIGHT, DEFAULT_SIZE, TITLE, \
     TAIL, HEAD, GREEN_APPLE, RED_APPLE, WALL, \
     COLORS_RED_APPLE, COLORS_GREEN_APPLE, COLORS_SNAKE, COLORS_WALL, \
     COLORS_EMPTY, COLORS_LINES, COLORS_TOOLBAR, COLORS_SNAKE_HEAD, \
-    IMAGE_PATH
+    IMAGE_PATH, GAME_SPEED
 
 
 class Render():
@@ -18,7 +18,7 @@ class Render():
         self.ratio = w_height / (grid_size + 2)
         self.font = None
         self.toolbar_width = self.window_width - self.window_height
-        self.button_height = self.window_height // 10
+        self.button_height = self.window_height // 25
         self.load_image()
 
     def __del__(self):
@@ -93,41 +93,32 @@ class Render():
                 pygame.draw.rect(self.screen, COLORS_LINES,
                                  pygame.Rect(x, y, self.ratio, self.ratio), 1)
 
-    def display_toolbar(self, score, grid_size):
+    def display_toolbar(self, score, epoch=None, epochs=None):
         rect = pygame.Rect(
                     self.window_height, 0,
                     self.toolbar_width, self.window_height
                 )
         pygame.draw.rect(self.screen, COLORS_LINES, rect)
-        self.display_score(score, grid_size)
-
-    def display_score(self, score, grid_size):
+        
         score_str = f'Score: {score}'
+        self.display_text(score_str, (self.window_height + 10, 10))
+        
+        speed_str = f"Speed: {GAME_SPEED}"
+        self.display_text(speed_str, (self.window_height + 10, self.button_height * 2))
+        
+        if epoch is not None and epochs is not None:
+            epoch_str = f"Epoch: {epoch + 1}/{epochs}"
+            self.display_text(epoch_str, (self.window_height + 10, self.button_height * 3))        
 
-        if self.font is None:
-            self.font = pygame.font.Font(None, int(self.button_height * 1.25))
-        score_text = self.font.render(score_str, True,
-                                      COLORS_EMPTY, COLORS_LINES)
-
-        self.screen.blit(score_text, (self.window_height + 10, 10),
-                         (0, 0, self.window_width, self.button_height))
-        self.update_speed()
-
-    def update_speed(self):
-        speed_up_str = "faster"
-        speed_down_str = "slower"
+    def display_text(self, text, coords ):
         if self.font is None:
             self.font = pygame.font.Font(None, int(self.button_height * 1.25))
 
-        speed_up_txt = self.font.render(speed_up_str, True,
+        speed_txt = self.font.render(text, True,
                                         COLORS_EMPTY, COLORS_LINES)
-        speed_down_txt = self.font.render(speed_down_str, True,
-                                          COLORS_EMPTY, COLORS_LINES)
 
-        self.screen.blit(speed_up_txt,
-                         (self.window_height + 10, self.button_height))
-        self.screen.blit(speed_down_txt,
-                         (self.window_height + 10, self.button_height * 2))
+        self.screen.blit(speed_txt,
+                         coords)
 
     def mean_scores(self, scores):
         length_block = len(scores) // 10

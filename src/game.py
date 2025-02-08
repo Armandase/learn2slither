@@ -1,4 +1,5 @@
 import pygame
+import time
 
 from src.utils import dir_from_keys, analyse_scores, \
     display_learning_curve, print_snake_vision
@@ -9,8 +10,7 @@ from src.SnakeAgent import SnakeAgent
 from src.Grid import Grid
 from src.Render import Render
 
-
-def train_agent(agent: SnakeAgent, grid, render, epochs, visual_mode=DEFAULT_VISUAL, verbose=False):
+def train_agent(agent: SnakeAgent, grid, render, epochs, visual_mode=DEFAULT_VISUAL, verbose=False, step_by_step=False):
     scores = []
     sum_reward = 0
     sum_length = 0
@@ -23,6 +23,20 @@ def train_agent(agent: SnakeAgent, grid, render, epochs, visual_mode=DEFAULT_VIS
         agent.update_epsilon()
         done = False
         while not done:
+            if visual_mode is True:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        display_learning_curve(scores)
+                        exit()  
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_ESCAPE]:
+                    display_learning_curve(scores)
+                    exit()
+                if step_by_step is True:
+                    if keys[pygame.K_f] and pygame.key.get_focused():
+                        pass
+                    else:
+                        continue
             action = agent.get_action(current_state)
             if verbose is True:
                 print(DIR_MAP[action])
@@ -37,23 +51,14 @@ def train_agent(agent: SnakeAgent, grid, render, epochs, visual_mode=DEFAULT_VIS
 
             if visual_mode is False:
                 continue
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    display_learning_curve(scores)
-                    exit()
 
             render.draw_grid(grid.board)
-            render.display_toolbar(length, grid.get_grid_size())
+            render.display_toolbar(length, epoch, epochs)
             render.display_curve(scores)
-
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_ESCAPE]:
-                # running = False
-                display_learning_curve(scores)
-                exit()
 
             clock.tick(GAME_SPEED + length // 3)
             pygame.display.flip()
+        
         sum_length += grid.get_snake_len()
         sum_reward += agent.score
         if epoch % METRICS_CALLBACK == 0:
@@ -105,7 +110,7 @@ def test_agent(agent: SnakeAgent, grid: Grid, render: Render, visual_mode=DEFAUL
     agent.reset()
     grid.reset_grid()
 
-def main_loop(render: Render, grid: Grid, epochs, agent: SnakeAgent, visual=DEFAULT_VISUAL, verbose=False):
+def main_loop(render: Render, grid: Grid, epochs, agent: SnakeAgent, visual=DEFAULT_VISUAL, verbose=False, step_by_step=False):
     global clock
     clock = pygame.time.Clock()
     running = True
@@ -116,12 +121,13 @@ def main_loop(render: Render, grid: Grid, epochs, agent: SnakeAgent, visual=DEFA
                 running = False
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_SPACE] and agent.train_agent is True:
-            train_agent(agent, grid, render, epochs, visual, verbose)
-        if keys[pygame.K_SPACE] and agent.train_agent is False:
-            test_agent(agent, grid, render, visual, verbose)
+
         if keys[pygame.K_ESCAPE]:
             running = False
+        if keys[pygame.K_SPACE] and agent.train_agent is True:
+            train_agent(agent, grid, render, epochs, visual, verbose, step_by_step)
+        if keys[pygame.K_SPACE] and agent.train_agent is False:
+            test_agent(agent, grid, render, visual, verbose)
 
         next_dir = dir_from_keys(keys, grid)
         new_case = grid.update_board(next_dir)
@@ -131,6 +137,6 @@ def main_loop(render: Render, grid: Grid, epochs, agent: SnakeAgent, visual=DEFA
             running = False
 
         render.draw_grid(grid.board)
-        render.display_toolbar(grid.get_snake_len(), grid.get_grid_size())
+        render.display_toolbar(grid.get_snake_len())
         clock.tick(GAME_SPEED + (grid.get_snake_len() // 3))
         pygame.display.flip()

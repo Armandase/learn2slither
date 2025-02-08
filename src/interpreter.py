@@ -14,7 +14,7 @@ def game_state(grid):
         next_obj_in_dir(grid, RIGHT),
         next_obj_in_dir(grid, UP),
         next_obj_in_dir(grid, DOWN),
-        close_to_death(x, y, LEFT, board, grid_size),  # left dangerous ?
+        close_to_death(x, y, LEFT, board, grid_size),
         close_to_death(x, y, RIGHT, board, grid_size),
         close_to_death(x, y, UP, board, grid_size),
         close_to_death(x, y, DOWN, board, grid_size),
