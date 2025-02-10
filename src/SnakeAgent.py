@@ -2,7 +2,7 @@ import numpy as np
 
 
 class SnakeAgent():
-    def __init__(self, grid_size, train=True):
+    def __init__(self, grid_size, train=True, model=None):
         self.discount_rate = 0.99
         self.learning_rate = 0.1
         self.eps = 0.1
@@ -16,6 +16,9 @@ class SnakeAgent():
         self.best_score = -np.inf
         self.steps = 0
         self.train_agent = train
+        if model is not None:
+            self.load_model(model)
+            print("Model loaded")
 
     def get_score(self):
         return self.score

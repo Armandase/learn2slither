@@ -67,6 +67,7 @@ def train_agent(agent: SnakeAgent, grid, render, epochs, visual_mode=DEFAULT_VIS
             sum_reward = 0
         save_best_model(agent, agent.score)
         if epoch % 500 == 0:
+            print("Q talbe", agent.q_table)
             save_q_table(agent.q_table, epoch)
         scores.append(agent.score)
         epoch += 1
@@ -125,8 +126,10 @@ def main_loop(render: Render, grid: Grid, epochs, agent: SnakeAgent, visual=DEFA
         if keys[pygame.K_ESCAPE]:
             running = False
         if keys[pygame.K_SPACE] and agent.train_agent is True:
+            print('Training agent')
             train_agent(agent, grid, render, epochs, visual, verbose, step_by_step)
         if keys[pygame.K_SPACE] and agent.train_agent is False:
+            print('Testing agent')
             test_agent(agent, grid, render, visual, verbose)
 
         next_dir = dir_from_keys(keys, grid)

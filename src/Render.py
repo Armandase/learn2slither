@@ -8,8 +8,8 @@ from src.constants import W_WIDTH, W_HEIGHT, DEFAULT_SIZE, TITLE, \
 
 class Render():
     def __init__(self,
-                 w_width=W_WIDTH, w_height=W_HEIGHT,
-                 grid_size=DEFAULT_SIZE):
+                 grid_size=DEFAULT_SIZE,
+                 w_width=W_WIDTH, w_height=W_HEIGHT):
         pygame.init()
         self.screen = pygame.display.set_mode((w_width, w_height))
         pygame.display.set_caption(TITLE)
