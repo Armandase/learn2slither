@@ -16,6 +16,7 @@ def train_agent(agent: SnakeAgent, grid, render, epochs, visual_mode=DEFAULT_VIS
     sum_length = 0
     epoch = 0
     running = False
+    step_trigger = False
     while epoch < epochs and not running:
         agent.reset()
         grid.reset_grid()
@@ -24,19 +25,19 @@ def train_agent(agent: SnakeAgent, grid, render, epochs, visual_mode=DEFAULT_VIS
         done = False
         while not done:
             if visual_mode is True:
+                step_trigger = False
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         display_learning_curve(scores)
-                        exit()  
-                keys = pygame.key.get_pressed()
-                if keys[pygame.K_ESCAPE]:
-                    display_learning_curve(scores)
-                    exit()
-                if step_by_step is True:
-                    if keys[pygame.K_f] and pygame.key.get_focused():
-                        pass
-                    else:
-                        continue
+                        exit()
+                    elif event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            display_learning_curve(scores)
+                            exit()
+                        elif event.key == pygame.K_f and step_by_step:
+                            step_trigger = True
+                if step_by_step is True and step_trigger is False:
+                    continue
             action = agent.get_action(current_state)
             if verbose is True:
                 print(DIR_MAP[action])
