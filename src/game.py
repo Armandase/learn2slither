@@ -67,7 +67,6 @@ def train_agent(agent: SnakeAgent, grid, render, epochs, visual_mode=DEFAULT_VIS
             sum_reward = 0
         save_best_model(agent, agent.score)
         if epoch % 500 == 0:
-            print("Q talbe", agent.q_table)
             save_q_table(agent.q_table, epoch)
         scores.append(agent.score)
         epoch += 1
