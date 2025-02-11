@@ -1,7 +1,8 @@
 import pygame
 import numpy as np
 import matplotlib.pyplot as plt
-from src.constants import UP, DOWN, LEFT, RIGHT, CHAR_MAP, MODELS_PATH
+from src.constants import UP, DOWN, LEFT, RIGHT, \
+    CHAR_MAP, MODELS_PATH, SUB_PLOT_STEPS
 import os
 from natsort import natsorted
 
@@ -85,8 +86,12 @@ def analyse_scores(scores):
 
 
 def display_learning_curve(scores):
-    analyse_scores(scores)
+    # keep n points used to create a curve with less points
+    recuded_scores = []
+    for i in range(0, len(scores), SUB_PLOT_STEPS):
+        recuded_scores.append(np.mean(scores[i:i + SUB_PLOT_STEPS]))
     plt.plot(range(len(scores)), scores)
+    plt.plot(range(0, len(scores), SUB_PLOT_STEPS), recuded_scores, 'r')
     plt.xlabel("Epochs")
     plt.ylabel("Scores")
     plt.title("Learning Curve")

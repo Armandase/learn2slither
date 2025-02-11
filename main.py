@@ -3,8 +3,7 @@ import argparse
 from src.Render import Render
 from src.Grid import Grid
 from src.game import main_loop, train_agent
-from src.constants import DEFAULT_SIZE, \
-    W_HEIGHT, W_WIDTH, EPOCHS, DEFAULT_VISUAL, GAME_SPEED
+from src.constants import DEFAULT_SIZE, EPOCHS, DEFAULT_VISUAL
 from src.SnakeAgent import SnakeAgent
 
 
@@ -13,12 +12,13 @@ def main(size=DEFAULT_SIZE, epochs=EPOCHS, visual_mode=DEFAULT_VISUAL,
 
     grid = Grid(size)
     agent = SnakeAgent(grid.get_grid_size(), train, model)
-        # agent.load_model(model)
+    # agent.load_model(model)
     if visual_mode is False:
         train_agent(agent, grid, None, epochs, visual_mode, verbose)
     else:
         render = Render(size)
-        main_loop(render, grid, epochs, agent, visual_mode, verbose, step_by_step)
+        main_loop(render, grid, epochs,
+                  agent, visual_mode, verbose, step_by_step)
 
 
 if __name__ == '__main__':
@@ -34,10 +34,11 @@ if __name__ == '__main__':
                            action=argparse.BooleanOptionalAction)
     argparser.add_argument('--step_by_step', default=False,
                            action=argparse.BooleanOptionalAction)
-    
+
     try:
         args = argparser.parse_args()
 
-        main(args.size, args.epochs, args.visual, args.model, args.train, args.verbose, args.step_by_step)
+        main(args.size, args.epochs, args.visual,
+             args.model, args.train, args.verbose, args.step_by_step)
     except Exception as e:
         print('Error:', e)

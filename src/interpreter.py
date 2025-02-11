@@ -1,7 +1,7 @@
 import numpy as np
 from src.utils import dir_to_point
 from src.constants import LEFT, RIGHT, UP, DOWN, \
-    REWARD_MAP, DEAD, EMPTY, WALL, GREEN_APPLE, RED_APPLE, TAIL
+    REWARD_MAP, DEAD, EMPTY, WALL, TAIL
 
 
 def game_state(grid):

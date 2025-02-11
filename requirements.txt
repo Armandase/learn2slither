@@ -1,6 +1,6 @@
 numpy
 pygame
 flake8
-matplotlib
+matplotlib==3.9.4
 prettytable
 natsort

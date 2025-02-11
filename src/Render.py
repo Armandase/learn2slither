@@ -1,8 +1,7 @@
 import pygame
 from src.constants import W_WIDTH, W_HEIGHT, DEFAULT_SIZE, TITLE, \
     TAIL, HEAD, GREEN_APPLE, RED_APPLE, WALL, \
-    COLORS_RED_APPLE, COLORS_GREEN_APPLE, COLORS_SNAKE, COLORS_WALL, \
-    COLORS_EMPTY, COLORS_LINES, COLORS_TOOLBAR, COLORS_SNAKE_HEAD, \
+    COLORS_EMPTY, COLORS_LINES, COLORS_WALL, \
     IMAGE_PATH, GAME_SPEED
 
 
@@ -55,24 +54,6 @@ class Render():
 
         for row in range(rows):
             for col in range(cols):
-                # if grid[row, col] == HEAD:
-                #     color = COLORS_SNAKE_HEAD
-                # elif grid[row, col] == TAIL:
-                #     color = COLORS_SNAKE
-                # elif grid[row, col] == RED_APPLE:
-                #     color = COLORS_RED_APPLE
-                # elif grid[row, col] == GREEN_APPLE:
-                #     color = COLORS_GREEN_APPLE
-                # else:
-                #     color = COLORS_EMPTY
-
-                # rect = pygame.Rect(
-                #     col * self.ratio, row * self.ratio,
-                #     self.ratio, self.ratio
-                # )
-
-                # pygame.draw.rect(self.screen, color, rect)
-                # pygame.draw.rect(self.screen, COLORS_LINES, rect, 1)
                 x, y = col * self.ratio, row * self.ratio
 
                 if grid[row, col] == HEAD:
@@ -99,41 +80,28 @@ class Render():
                     self.toolbar_width, self.window_height
                 )
         pygame.draw.rect(self.screen, COLORS_LINES, rect)
-        
+
         score_str = f'Score: {score}'
         self.display_text(score_str, (self.window_height + 10, 10))
-        
+
         speed_str = f"Speed: {GAME_SPEED}"
-        self.display_text(speed_str, (self.window_height + 10, self.button_height * 2))
-        
+        self.display_text(speed_str, (
+            self.window_height + 10, self.button_height * 2))
+
         if epoch is not None and epochs is not None:
             epoch_str = f"Epoch: {epoch + 1}/{epochs}"
-            self.display_text(epoch_str, (self.window_height + 10, self.button_height * 3))        
+            self.display_text(epoch_str, (
+                self.window_height + 10, self.button_height * 3))
 
-    def display_text(self, text, coords ):
+    def display_text(self, text, coords):
         if self.font is None:
             self.font = pygame.font.Font(None, int(self.button_height * 1.25))
 
-        speed_txt = self.font.render(text, True,
-                                        COLORS_EMPTY, COLORS_LINES)
+        speed_txt = self.font.render(text,
+                                     True, COLORS_EMPTY, COLORS_LINES)
 
         self.screen.blit(speed_txt,
                          coords)
-
-    def mean_scores(self, scores):
-        length_block = len(scores) // 10
-        complement = len(scores) % 10
-
-        avg_scores = []
-
-        for i in range(10):
-            if i < complement:
-                avg_scores.append(sum(scores[
-                    (i * length_block) + i:((i + 1) * length_block) + i]))
-            else:
-                avg_scores.append(sum(
-                    scores[i * length_block:(i + 1) * length_block]))
-        return avg_scores
 
     def display_curve(self, scores):
         import matplotlib
@@ -141,13 +109,13 @@ class Render():
         import matplotlib.backends.backend_agg as agg
         import pylab
 
-        fig = pylab.figure(figsize=[4, 4], dpi=self.button_height,)
+        fig = pylab.figure(figsize=[4, 4], dpi=self.button_height * 2,)
         ax = fig.gca()
-        # if len(scores) > 10:
-            # ax.plot(self.mean_scores(scores))
-        # else:
+
         ax.plot(scores)
-        ax.set_title("Mobile average")
+        ax.set_title("Scores over epochs")
+        ax.set_xlabel("Epochs")
+        ax.set_ylabel("Scores")
 
         canvas = agg.FigureCanvasAgg(fig)
         canvas.draw()
@@ -158,5 +126,5 @@ class Render():
 
         surf = pygame.image.fromstring(raw_data, size, "RGB")
         self.screen.blit(surf, (self.window_height + 20,
-                                self.window_height - self.button_height * 4))
+                                self.button_height * 6))
         matplotlib.pyplot.close()

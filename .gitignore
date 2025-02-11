@@ -1,6 +1,5 @@
 en.subject.pdf
 learn2slither.py
-models/
 .venv/
 __pycache__/
 .ipynb_checkpoints/
@@ -20,3 +19,4 @@ src/.mypy_cache/
 src/.coverage
 src/.DS_Store
 src/*.egg-info/
+models/

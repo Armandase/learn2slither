@@ -16,7 +16,7 @@ def display_training_info(epochs, epoch, sum_length, sum_reward):
 def save_q_table(q_table, nb_epoch, path=MODELS_PATH):
     path = f"{path}q_table_e{nb_epoch}.npy"
     np.save(path, q_table)
-    # print(f"Q-table saved at {path}")
+    print(f"Q-table saved at {path}")
 
 
 def save_best_model(agent, score, path=MODELS_PATH):
@@ -24,4 +24,4 @@ def save_best_model(agent, score, path=MODELS_PATH):
         return
     path = f"{path}/q_table_best_model.npy"
     np.save(path, agent.q_table)
-    # print("New best models has been saved")
+    print("New best models has been saved")

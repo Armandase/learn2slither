@@ -93,7 +93,7 @@ class Grid():
         new_pos = dir_to_point(next_dir)
         # if self.current_dir is None \
         #   and (self.snake[-1] + new_pos == self.snake[-2]).all():
-            # return EMPTY
+        #       return EMPTY
 
         self.head_pos = self.snake[-1] + new_pos
         checked_pos = self.check_move(self.head_pos)
@@ -124,8 +124,8 @@ class Grid():
         # Check if the new position is out of bounds
         value_pos = self.board[tuple(new_pos)]
         # if not (0 <= new_pos).all() \
-            # or not (new_pos < self.get_grid_size()).all() \
-                # or value_pos == WALL or value_pos == TAIL:
+        #   or not (new_pos < self.get_grid_size()).all() \
+        #   or value_pos == WALL or value_pos == TAIL:
         if value_pos == WALL or value_pos == TAIL:
             return DEAD
         return value_pos
