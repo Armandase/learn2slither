@@ -9,11 +9,18 @@ from src.callbacks import display_training_info, save_q_table, save_best_model
 from src.SnakeAgent import SnakeAgent
 from src.Grid import Grid
 from src.Render import Render
+import time
+
+
+def game_started(keys):
+    return keys[pygame.K_UP] or keys[pygame.K_DOWN] or\
+        keys[pygame.K_LEFT] or keys[pygame.K_RIGHT]
 
 
 def train_agent(agent: SnakeAgent, grid: Grid,
                 render: Render, epochs: int,
-                visual_mode=DEFAULT_VISUAL, verbose=False, step_by_step=False):
+                visual_mode=DEFAULT_VISUAL, verbose=False,
+                step_by_step=False):
     scores = []
     sum_reward = 0
     sum_length = 0
@@ -123,29 +130,44 @@ def main_loop(render: Render, grid: Grid, epochs, agent: SnakeAgent,
     clock = pygame.time.Clock()
     running = True
 
+    started = False
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
         keys = pygame.key.get_pressed()
+        if game_started(keys):
+            render.draw_grid(grid.board)
+            render.display_toolbar(grid.get_snake_len())
+            started = True
 
         if keys[pygame.K_ESCAPE]:
             running = False
         if keys[pygame.K_SPACE] and agent.train_agent is True:
+            started = True
             print('Training agent')
             train_agent(agent, grid, render, epochs,
                         visual, verbose, step_by_step)
         if keys[pygame.K_SPACE] and agent.train_agent is False:
+            started = True
             print('Testing agent')
             test_agent(agent, grid, render, visual, verbose)
 
+        if started is False:
+            render.display_begin()
+            continue
+        if verbose is True:
+            print_snake_vision(grid)
         next_dir = dir_from_keys(keys, grid)
         new_case = grid.update_board(next_dir)
         if new_case == DEAD or new_case == WALL or new_case == TAIL:
+            render.display_game_over()
             print("Final score:", grid.get_snake_len())
             print("Game over")
             running = False
+            time.sleep(1)
+            break
 
         render.draw_grid(grid.board)
         render.display_toolbar(grid.get_snake_len())

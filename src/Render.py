@@ -29,6 +29,8 @@ class Render():
         self.img_red_apple = pygame.image.load(f'{IMAGE_PATH}/red_apple.png')
         self.img_green_apple = pygame.image.load(
             f'{IMAGE_PATH}/green_apple.png')
+        self.img_play_game = pygame.image.load(f'{IMAGE_PATH}/play_game.jpg')
+        self.img_game_over = pygame.image.load(f'{IMAGE_PATH}/game_over.jpg')
 
         # Redimensionne les images à la taille des cases de la grille
         self.img_snake_head = pygame.transform.scale(
@@ -39,6 +41,10 @@ class Render():
             self.img_red_apple, (self.ratio, self.ratio))
         self.img_green_apple = pygame.transform.scale(
             self.img_green_apple, (self.ratio, self.ratio))
+        self.img_play_game = pygame.transform.scale(
+            self.img_play_game, (self.window_width, self.window_height))
+        self.img_game_over = pygame.transform.scale(
+            self.img_game_over, (self.window_width, self.window_height))
 
     def get_screen(self):
         return self.screen
@@ -128,3 +134,11 @@ class Render():
         self.screen.blit(surf, (self.window_height + 20,
                                 self.button_height * 6))
         matplotlib.pyplot.close()
+
+    def display_begin(self):
+        self.screen.blit(self.img_play_game, (0, 0))
+        pygame.display.flip()
+
+    def display_game_over(self):
+        self.screen.blit(self.img_game_over, (0, 0))
+        pygame.display.flip()
